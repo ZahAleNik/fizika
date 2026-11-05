@@ -47,6 +47,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
   <h1>Практическая работа · Формативное оценивание</h1>
   <div class="sub">Физика, 7 класс · Масса тела. Измерение массы. Взаимодействие тел</div>
 </header>
+<div id="toast" style="display:none;position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9;background:#c0392b;color:#fff;padding:10px 16px;border-radius:10px;font-size:15px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:92%;text-align:center"></div>
 <main>
 <div class="steps" id="steps"><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
@@ -60,6 +61,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
   </div>
   <label>Класс</label><input type="text" id="cls" placeholder="например, 7В" autocomplete="off">
   <div class="theory">В работе четыре задания, максимум 10 баллов. Значения у каждого ученика свои, поэтому выполняйте измерения сами.</div>
+  <div class="task" style="border-left-color:#c0392b;background:#fdecea"><b>⚠ Внимание!</b> Во время работы нельзя сворачивать страницу, переходить в другие приложения или вкладки, а также блокировать или выключать телефон. <b>Каждый уход со страницы — минус 1 балл.</b><br>Задания открываются по очереди. <b>Вернуться к предыдущему заданию нельзя.</b></div>
   <div class="err" id="e0"></div>
   <div class="nav"><span></span><button onclick="go(1)">Начать</button></div>
 </section>
@@ -78,7 +80,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
   <input type="range" id="rider" min="0" max="10" step="0.2" value="0" style="width:100%" oninput="updBal()">
   <label>Масса тела m (г)</label><input type="text" inputmode="decimal" id="a1" placeholder="например, 37,4">
   <div class="err" id="e1"></div>
-  <div class="nav"><button class="sec" onclick="go(0)">Назад</button><button onclick="go(2)">Далее</button></div>
+  <div class="nav"><span></span><button id="next1" onclick="go(2)">Далее</button></div>
 </section>
 
 <!-- 2. Электронные весы -->
@@ -96,7 +98,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
   </div>
   <label>Масса тела по электронным весам m (г)</label><input type="text" inputmode="decimal" id="a2">
   <div class="err" id="e2"></div>
-  <div class="nav"><button class="sec" onclick="go(1)">Назад</button><button onclick="go(3)">Далее</button></div>
+  <div class="nav"><span></span><button id="next2" onclick="go(3)">Далее</button></div>
 </section>
 
 <!-- 3. Тележки -->
@@ -115,7 +117,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
   </div>
   <label>Масса правой тележки <i>m</i><sub>2</sub> (г)</label><input type="text" inputmode="decimal" id="a3m">
   <div class="err" id="e3"></div>
-  <div class="nav"><button class="sec" onclick="go(2)">Назад</button><button onclick="go(4)">Далее</button></div>
+  <div class="nav"><span></span><button id="next3" onclick="go(4)">Далее</button></div>
 </section>
 
 <!-- 4. Перевод единиц -->
@@ -125,7 +127,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
   <div class="task">Переведите массу в указанные единицы. Десятичную дробь пишите через запятую.</div>
   <div id="conv"></div>
   <div class="err" id="e4"></div>
-  <div class="nav"><button class="sec" onclick="go(3)">Назад</button><button id="finBtn" onclick="go(5)">Завершить и отправить</button></div>
+  <div class="nav"><span></span><button id="finBtn" onclick="go(5)">Завершить и отправить</button></div>
 </section>
 
 <!-- 5. Итог -->
@@ -140,7 +142,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
 <script>
 /* ===== Настройки ===== */
 // Ссылка на веб-приложение Google Apps Script (URL, который заканчивается на /exec):
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRfrm91KYZkd2TOeLDOX8Y_6KlkqM55wYyRQT6tWOenmqLFIC46qDZAVJ_CYL6HbP2qA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuwpr12KO64XIEiNpaTgBWxHay571oCzMhlQ6KYe_e5d8xvgARo24XWxKRXK4gTNsz/exec";
 const WORK_TITLE = "ФО: измерение массы (7 кл.)";
 
 /* ===== Вспомогательные ===== */
@@ -170,20 +172,31 @@ CONV.forEach((c,i)=>{ const d=document.createElement('div'); d.className='row'; 
   d.innerHTML=`<div style="flex:0 0 auto;font-size:18px;min-width:120px"><b>${fnum(c.q)} ${c.from}</b> =</div><div><input type="text" inputmode="decimal" id="cv${i}"></div><div style="flex:0 0 auto;font-size:18px">${c.to}</div>`;
   $('conv').appendChild(d); });
 
+/* ===== Экран не гаснет во время работы ===== */
+let wakeLock=null;
+async function keepAwake(){
+  try{ if('wakeLock' in navigator && !document.hidden && !(wakeLock && !wakeLock.released)) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && cur>=1) keepAwake(); });
+
 /* ===== Навигация ===== */
 let cur = 0;
-function showStep(n){
+function showStep(n){ if(n>=1) keepAwake();
   for(let i=0;i<6;i++) $('s'+i).classList.toggle('hidden', i!==n);
   [...$('steps').children].forEach((s,i)=>s.classList.toggle('on', i<=n));
   cur = n; window.scrollTo(0,0);
 }
 function go(n){
+  if(n<cur) return;                          // назад нельзя
   if (n > cur){
     const e = $('e'+cur); e.textContent='';
     if (cur===0 && (!$('fam').value.trim()||!$('nam').value.trim()||!$('cls').value.trim())){ e.textContent='Заполните фамилию, имя и класс.'; return; }
     if (cur===1 && isNaN(num($('a1').value))){ e.textContent='Запишите массу тела числом.'; return; }
     if (cur===2 && isNaN(num($('a2').value))){ e.textContent='Запишите массу тела числом.'; return; }
     if (cur===3 && [$('a3v1'),$('a3v2'),$('a3m')].some(i=>isNaN(num(i.value)))){ e.textContent='Заполните все три поля числами.'; return; }
+    if (cur>=1 && cur<=3){ const nb=$('next'+cur);
+      if(!nb.dataset.armed){ nb.dataset.armed='1'; nb.textContent='Перейти дальше? Нажмите ещё раз'; nb.style.background='#c0392b';
+        e.textContent='Вернуться к этому заданию будет нельзя.'; return; } }
     if (cur===4){
       if (CONV.some((c,i)=>isNaN(num($('cv'+i).value)))){ e.textContent='Заполните все ответы числами.'; return; }
       const fb=$('finBtn');
@@ -365,6 +378,18 @@ function resetCarts(){ burned=false; $('burn').disabled=false; drawTrack(0); }
 drawTrack(0);
 
 
+/* ===== Уходы со страницы: каждый — минус 1 балл ===== */
+let LEAVES=0, leftAt=0, awaySec=0;
+document.addEventListener('visibilitychange',()=>{
+  if(cur<1 || cur>4) return;                 // считаем только во время выполнения заданий
+  if(document.hidden){ LEAVES++; leftAt=Date.now(); }
+  else {
+    if(leftAt) awaySec+=Math.round((Date.now()-leftAt)/1000);
+    const t=$('toast'); t.innerHTML=`Вы уходили со страницы: −1 балл. Всего уходов: ${LEAVES}`; t.style.display='block';
+    clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none',4000);
+  }
+});
+
 /* ===== Проверка и отправка ===== */
 let RESULT=null;
 function finish(){
@@ -383,6 +408,9 @@ function finish(){
   CONV.forEach((c,i)=>{ const a=num($('cv'+i).value);
     tot+=add(`Задание 4: ${fnum(c.q)} ${c.from} = ? ${c.to}`, fnum(a), fnum(c.a), Math.abs(a-c.a)<=1e-6*Math.max(1,c.a)?1:0, 1); });
   const max=rows.reduce((s,r)=>s+r.max,0);
+  const pen=Math.min(LEAVES,tot);
+  rows.push({name:'Уходы со страницы (−1 балл за каждый)', ans:LEAVES+' раз, '+awaySec+' с', right:'0', p:-pen, max:0});
+  tot-=pen;
 
   RESULT={ work:WORK_TITLE, fam:$('fam').value.trim(), nam:$('nam').value.trim(), cls:$('cls').value.trim(),
     score:tot, max, rows,
