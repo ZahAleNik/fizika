@@ -134,6 +134,8 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
 <section class="card hidden" id="s5">
   <h2>Работа завершена</h2>
   <p id="who"></p>
+  <p class="big" id="score"></p>
+  <div id="details" style="margin-bottom:10px"></div>
   <div id="sendState" class="note">Отправка результата…</div>
   <div class="nav"><span></span><button class="sec hidden" id="resend" onclick="send()">Отправить ещё раз</button></div>
 </section>
@@ -418,6 +420,10 @@ function finish(){
 
   showStep(5);
   $('who').textContent = `${RESULT.fam} ${RESULT.nam}, ${RESULT.cls}`;
+  $('score').textContent=`Ваш результат: ${tot} из ${max} баллов`;
+  let h='<table><tr><th>Задание</th><th>Ваш ответ</th><th>Балл</th></tr>';
+  rows.forEach(r=>{ h+=`<tr><td>${r.name}</td><td>${r.ans}</td><td class="${r.p<0?'bad':(r.p===r.max?'ok':(r.p?'':'bad'))}">${r.max?r.p+' / '+r.max:r.p}</td></tr>`; });
+  $('details').innerHTML=h+'</table>';
   // ученику баллы и ответы не показываются — они есть только у учителя в таблице
   send();
 }
