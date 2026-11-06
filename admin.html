@@ -40,7 +40,7 @@ button:disabled{opacity:.5}
 </div>
 <div class="card">
   <div class="row">
-    <div><label>Работа</label><select id="work" onchange="syncMode()"><option value="therm">Термодинамика (8 кл.)</option><option value="mkt">МКТ: ν, N, Ē, v (10 кл.)</option></select></div>
+    <div><label>Работа</label><select id="work" onchange="syncMode()"><option value="therm">Термодинамика (8 кл.)</option><option value="mkt">МКТ: ν, N, Ē, v (10 кл.)</option><option value="teplo">Тепловые двигатели, КПД (8 кл.)</option></select></div>
     <div><label>Класс</label><input id="cls" list="clsList" placeholder="8Б"><datalist id="clsList"><option>8Б</option><option>8В</option><option>10А</option><option>10В</option></datalist></div>
     <div><label>Время доступа</label><select id="min"><option value="5">5 мин</option><option value="10">10 мин</option><option value="15" selected>15 мин</option><option value="20">20 мин</option><option value="30">30 мин</option><option value="40">40 мин</option><option value="45">45 мин</option></select></div>
     <div id="modeBox"><label>Варианты</label><select id="mode"><option value="random">Случайно (В1 или В2)</option><option value="v1">Только вариант 1</option><option value="v2">Только вариант 2</option></select></div>
@@ -1354,7 +1354,7 @@ function render(){
   if(!CUR){ $('state').innerHTML='<span class="closed">🔒 Доступ закрыт</span>'; $('qr').innerHTML=''; $('code').textContent=''; $('clsShow').textContent=''; $('left').textContent=''; $('link').textContent=''; return; }
   const url=STUDENT+'?k='+CUR.code;
   $('state').innerHTML='<span class="open">🟢 Доступ открыт</span>';
-  $('qr').innerHTML=qrSVG(url); $('code').textContent=CUR.code; $('clsShow').textContent=(CUR.cls||'')+(CUR.work==='mkt'?' · МКТ':' · Термодинамика'); $('link').textContent=url;
+  $('qr').innerHTML=qrSVG(url); $('code').textContent=CUR.code; $('clsShow').textContent=(CUR.cls||'')+({mkt:' · МКТ',teplo:' · Тепловые двигатели'}[CUR.work]||' · Термодинамика'); $('link').textContent=url;
   const tick=()=>{ const ms=CUR.until-(Date.now()+SKEW); if(ms<=0){ CUR=null; render(); return; }
     const m=Math.floor(ms/60000), s=Math.floor(ms/1000)%60; $('left').textContent=`Осталось ${m}:${String(s).padStart(2,'0')}`; };
   tick(); timer=setInterval(tick,1000);
