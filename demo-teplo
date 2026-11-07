@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta property="og:title" content="Демо: I закон термодинамики, КПД — интерактивное задание по физике">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Демо: I закон термодинамики, КПД</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#eef2f7;color:#1c2430;font-size:17px;-webkit-tap-highlight-color:transparent}
+.demo{background:#ffe08a;text-align:center;font-weight:700;padding:6px;font-size:14px}
+#app{max-width:760px;margin:0 auto;padding:12px 12px 100px}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:12px}
+h1{font-size:22px;margin:0 0 10px}
+.hdr{font-size:14px;color:#557;margin-bottom:6px}
+.q{font-size:18px;line-height:1.5;margin:4px 0 10px}
+.q i{font-family:"Times New Roman",serif;font-size:20px}
+.parts{margin:8px 0 0;padding-left:0;list-style:none}
+.parts li{margin:14px 0 2px;font-size:17px;line-height:1.4}
+.ans{display:flex;align-items:flex-start;gap:8px;margin:6px 0 4px}
+.lab{font-size:23px;font-weight:700;white-space:nowrap;font-family:"Times New Roman",serif;font-style:italic;padding-top:10px}
+.lab sub{font-size:15px;font-style:normal}
+.unit{font-size:22px;font-weight:700;white-space:nowrap;padding-top:10px}
+input.num{flex:1;min-width:0;width:100%;font-size:22px;padding:12px;border:2px solid #b8c4d6;border-radius:12px}
+input.num:focus,input.txt:focus{outline:none;border-color:#2f6fed}
+label.f{display:block;font-size:15px;color:#445;margin:10px 0 4px}
+input.txt{width:100%;font-size:19px;padding:12px;border:2px solid #b8c4d6;border-radius:12px}
+.btn{display:block;width:100%;border:0;border-radius:14px;background:#2f6fed;color:#fff;font-size:19px;font-weight:700;padding:15px;margin-top:12px;cursor:pointer}
+.btn.sec{background:#e3eaf6;color:#1c3d7a}
+.row{display:flex;gap:10px}.row .btn{flex:1}
+.info{background:#e9f7ee;border-left:5px solid #2e9e5b;border-radius:10px;padding:10px 12px;font-size:15.5px;line-height:1.45}
+.info li{margin:3px 0}
+#pm{position:fixed;display:none;z-index:60;width:52px;height:44px;border-radius:12px;border:0;background:#1f4fc4;color:#fff;font-size:26px;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.mod{position:fixed;inset:0;background:rgba(10,20,40,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.mbox{background:#fff;border-radius:18px;padding:20px;max-width:420px;width:100%}
+.mt{font-size:18px;line-height:1.45}
+.mb{display:flex;gap:10px}.mb .btn{flex:1}
+.pic{display:flex;justify-content:center;margin:6px 0}
+.photo{border:2px dashed #8aa0c0;border-radius:14px;padding:12px;margin-top:16px;background:#f7f9fc}
+.photo b{font-size:16px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.th{position:relative;width:96px;height:96px;border-radius:10px;overflow:hidden;background:#ddd}
+.th img{width:100%;height:100%;object-fit:cover}
+.th button{position:absolute;top:3px;right:3px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:16px}
+.addph{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;background:#2f6fed;color:#fff;font-size:17px;font-weight:700;padding:12px 14px;margin-top:8px;cursor:pointer}
+.small{font-size:13.5px;color:#667;margin-top:6px}
+table.res{width:100%;border-collapse:collapse;font-size:15.5px}
+table.res td,table.res th{border-bottom:1px solid #dde3ec;padding:8px 4px;text-align:left;vertical-align:top}
+.exp{width:100%;max-width:420px;display:block;margin:0 auto}
+.stand2{display:flex;gap:8px;align-items:flex-start}.exp2{flex:1;min-width:0;max-width:330px}
+.side2{flex:0 0 118px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.lupa{width:112px;height:112px;border-radius:50%;border:5px solid #445;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.lupa svg{width:100%;height:100%;display:block}.lcap{font-size:12px;color:#667}
+.disps{display:flex;gap:10px;margin-top:8px}
+.disp{flex:1;width:100%;background:#18232f;color:#7dffa0;border-radius:12px;padding:8px 10px;text-align:center}
+.dl{color:#cfe;font-size:13px}.dv{font-family:"Courier New",monospace;font-size:28px;font-weight:700}.du{color:#fff;font-size:21px;font-weight:700}
+.hold{display:block;width:100%;border:0;border-radius:14px;background:#ffe3cc;color:#8a3a00;font-size:19px;font-weight:700;padding:16px;margin-top:10px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.hold.on{background:#ff8a1e;color:#fff;transform:scale(.98)}.hold:disabled{opacity:.45}
+.st{text-align:center;font-weight:700;color:#1f7a3a;margin-top:6px;min-height:20px}
+.phb{display:flex;gap:8px}.phb .addph{flex:1}.addph.sec2{background:#e3eaf6;color:#1c3d7a}
+.warn2{background:#fff4e0;border-left:5px solid #f0a020;border-radius:10px;padding:8px 10px;font-size:15px;line-height:1.4;margin-top:8px}
+</style>
+</head>
+<body>
+<div style="background:#ffe08a;text-align:center;font-weight:700;padding:7px 8px;font-size:14px;line-height:1.35">Демо-версия · ответы и фото никуда не отправляются<br><span style="font-weight:500">Автор: Захаров А. Н., учитель физики</span></div>
+<div id="app"></div>
+<button id="pm" type="button">±</button>
+<script>
+const $=s=>document.querySelector(s);
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(x,d=2)=>isFinite(x)?String(+x.toFixed(d)).replace('.',',').replace('-','−'):'—';
+
+/* ---------- числа (у каждого свои) ---------- */
+const D={z1:{p:R(5,20)*20,V0:R(1,3),k:pick([2.5,3.5])},z2:{M:R(10,40)*100,eta:R(25,35)/100}};
+const S={page:-1,raw:{},photos:{1:[],2:[]},V:D.z1.V0,h:0};
+const SU='__SCRIPT_URL__',CODE='DEMO_TEPLO',DCLS=/^__/.test('__DZ_CLASS__')?'':'__DZ_CLASS__',DUNTIL=Number('__DZ_UNTIL__')||0;
+const DKEY='dz_'+CODE;
+try{const st=JSON.parse(localStorage.getItem(DKEY)||'null');if(st&&st.D&&st.S){Object.assign(D,st.D);Object.assign(S,st.S);S.photos={1:[],2:[]};if(S.page>=2&&!S.sent)S.page=1;}}catch(e){}
+function save(){try{const c=Object.assign({},S,{photos:{1:[],2:[]}});localStorage.setItem(DKEY,JSON.stringify({D,S:c}));}catch(e){}}
+document.addEventListener('input',e=>{if(e.target.id&&e.target.id.startsWith('f_')){S.raw[e.target.id.slice(2)]=e.target.value;save();}});
+const at=(id,a,v)=>{const e=document.getElementById(id);if(e)e.setAttribute(a,v);};
+/* удержание кнопки: пока держат — идёт процесс, после отпускания доходит до целого деления */
+function holdBtn(btn,step,done){let on=false,tgt=null,last=0;
+  const loop=ts=>{const dt=last?(ts-last)/1000:0;last=ts;const r=step(dt,on,tgt);if(r==='stop'){tgt=null;last=0;save();done&&done();return;}if(typeof r==='number')tgt=r;requestAnimationFrame(loop);};
+  const start=e=>{e.preventDefault();if(on)return;on=true;tgt=null;btn.classList.add('on');if(!last)requestAnimationFrame(loop);};
+  const stop=()=>{if(!on)return;on=false;btn.classList.remove('on');};
+  btn.addEventListener('pointerdown',start);['pointerup','pointerleave','pointercancel'].forEach(x=>btn.addEventListener(x,stop));
+  btn.addEventListener('contextmenu',e=>e.preventDefault());}
+
+/* ---------- Задача 1: газ под поршнем ---------- */
+function gasSVG(){const p=D.z1.p;let sc='';
+  for(let v=0;v<=10;v+=.5){const y=260-v*20,big=v%1===0;sc+=`<line x1="170" x2="${big?184:178}" y1="${y}" y2="${y}" stroke="#123" stroke-width="${big?1.4:.8}"/>`;if(big)sc+=`<text x="187" y="${y+4}" font-size="11">${v}</text>`;}
+  let man='';const cx=270,cy=100,r=52,a=v=>(-225+v/500*270)*Math.PI/180;
+  for(let v=0;v<=500;v+=20){const t=a(v),big=v%100===0,r1=big?r-9:r-5;man+=`<line x1="${cx+r*Math.cos(t)}" y1="${cy+r*Math.sin(t)}" x2="${cx+r1*Math.cos(t)}" y2="${cy+r1*Math.sin(t)}" stroke="#123" stroke-width="${big?1.6:.9}"/>`;
+    if(big)man+=`<text x="${cx+(r-19)*Math.cos(t)}" y="${cy+(r-19)*Math.sin(t)+3.5}" font-size="10" text-anchor="middle">${v}</text>`;}
+  const tp=a(p);
+  return `<svg class="exp" viewBox="0 0 330 300">
+<text x="196" y="44" font-size="18" font-weight="800">л</text>
+<rect id="gz" x="92" y="200" width="76" height="60" fill="#ffd7c2"/>
+<line x1="90" y1="40" x2="90" y2="262" stroke="#445" stroke-width="4"/><line x1="170" y1="40" x2="170" y2="262" stroke="#445" stroke-width="4"/><line x1="88" y1="262" x2="172" y2="262" stroke="#445" stroke-width="4"/>${sc}
+<g id="ps"><rect x="92" y="-10" width="76" height="10" fill="#7b8797" stroke="#445"/><rect x="110" y="-32" width="40" height="22" fill="#6b5b4b" rx="2"/></g>
+<path d="M170 250 H226 V150" fill="none" stroke="#889" stroke-width="5"/>
+<circle cx="${cx}" cy="${cy}" r="${r+5}" fill="#fff" stroke="#445" stroke-width="4"/>${man}
+<text x="${cx}" y="${cy+38}" font-size="15" font-weight="800" text-anchor="middle">кПа</text>
+<line x1="${cx}" y1="${cy}" x2="${cx+(r-4)*Math.cos(tp)}" y2="${cy+(r-4)*Math.sin(tp)}" stroke="#d22" stroke-width="2.2"/><circle cx="${cx}" cy="${cy}" r="4" fill="#333"/>
+<rect x="95" y="272" width="70" height="12" rx="3" fill="#556"/>
+<g id="fl" opacity="0"><path d="M110 270 q5 -14 10 0 M126 270 q5 -16 10 0 M142 270 q5 -14 10 0" fill="#ff8a1e" stroke="#e04f3c" stroke-width="1.5"/></g>
+</svg>
+<div class="disps"><div class="disp"><div class="dl">Счётчик теплоты, полученной газом</div><div class="dv" id="q1c">0</div><div class="du">Дж</div></div></div>
+<button class="hold" id="hb1">🔥 Нагревать (удерживайте)</button><div class="st" id="s1"></div><div class="warn2">⚠ Опыт можно продолжать и повторять, но в ответы вписывайте значения, соответствующие <b>последним</b> показаниям приборов.</div>`;}
+function gasDraw(){const V=S.V,y=260-V*20;at('ps','transform',`translate(0,${y})`);at('gz','y',y);at('gz','height',260-y);
+  const c=document.getElementById('q1c');if(c)c.textContent=Math.round(D.z1.k*D.z1.p*(V-D.z1.V0));}
+function gasMount(){gasDraw();const b=$('#hb1');if(S.V>=10){b.disabled=true;$('#s1').textContent='Поршень дошёл до верха цилиндра';}
+  holdBtn(b,(dt,on,tgt)=>{at('fl','opacity',on?1:0);
+    if(on)S.V=Math.min(10,S.V+dt*1.2);else{const t=tgt??Math.min(10,Math.ceil(S.V-1e-9));S.V=Math.min(t,S.V+dt*1.2);gasDraw();if(S.V>=t-1e-9){S.V=t;gasDraw();return 'stop';}return t;}
+    gasDraw();if(S.V>=10){S.V=10;gasDraw();at('fl','opacity',0);b.disabled=true;$('#s1').textContent='Поршень дошёл до верха цилиндра';return 'stop';}},()=>at('fl','opacity',0));}
+
+/* ---------- Задача 2: подъёмный кран ---------- */
+const fuel=h=>Math.round(D.z2.M*10*h/(D.z2.eta*42e6)*1000*10)/10;   // г, как показывает прибор
+function craneInner(){let rl='';
+  for(let m=0;m<=30;m++){const y=340-m*10,big=m%5===0;rl+=`<line x1="40" x2="${big?54:48}" y1="${y}" y2="${y}" stroke="#123" stroke-width="${big?1.4:.8}"/>`;rl+=`<text x="37" y="${y+3.5}" font-size="${big?10:7}" text-anchor="end" fill="${big?'#000':'#556'}">${m}</text>`;}
+  return `<rect x="38" y="36" width="20" height="306" fill="#fff7d6" stroke="#998"/>${rl}<text x="48" y="28" font-size="17" font-weight="800" text-anchor="middle">м</text>
+<line x1="0" y1="342" x2="300" y2="342" stroke="#776" stroke-width="4"/>
+<rect x="222" y="22" width="14" height="320" fill="none" stroke="#e0a800" stroke-width="3"/>${Array.from({length:16},(_,i)=>`<line x1="222" y1="${22+i*20}" x2="236" y2="${42+i*20}" stroke="#e0a800" stroke-width="2"/>`).join('')}
+<rect x="70" y="12" width="210" height="12" fill="#e0a800"/><rect x="250" y="24" width="30" height="22" fill="#777"/>
+<rect x="110" y="24" width="22" height="8" fill="#555"/>
+<rect x="232" y="300" width="50" height="40" rx="3" fill="#3d6fb8"/><rect x="240" y="306" width="16" height="12" fill="#cfe6ff"/><rect x="268" y="286" width="7" height="16" fill="#555"/><circle id="pf" cx="271" cy="278" r="7" fill="#999" opacity="0"/>
+<g id="ld"><line id="rp" x1="121" y1="32" x2="121" y2="0" stroke="#333" stroke-width="2"/><path d="M121 -36 l-6 6 h12z" fill="#333"/>
+<rect x="86" y="-30" width="70" height="30" fill="#a8adb3" stroke="#556" stroke-width="1.5"/><text x="121" y="-9" font-size="15" font-weight="800" text-anchor="middle">${D.z2.M} кг</text>
+<line x1="56" y1="0" x2="86" y2="0" stroke="#d22" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M56 0 l8 -4 v8z" fill="#d22"/></g>`;}
+function craneSVG(){const c=craneInner();return `<div class="stand2"><svg class="exp2" viewBox="0 0 300 350">${c}</svg>
+ <div class="side2"><div class="lupa"><svg id="cl" viewBox="10 300 50 50">${c}</svg></div><div class="lcap">лупа</div>
+ <div class="disp"><div class="dl">Израсходовано топлива</div><div class="dv" id="fc">0,0</div><div class="du">г</div></div></div></div>
+ <button class="hold" id="hb2">▲ Поднимать груз (удерживайте)</button><div class="st" id="s2"></div><div class="warn2">⚠ Опыт можно продолжать и повторять, но в ответы вписывайте значения, соответствующие <b>последним</b> показаниям приборов.</div>`;}
+function craneDraw(){const h=S.h,y=340-h*10;document.querySelectorAll('#ld').forEach(g=>g.setAttribute('transform',`translate(0,${y})`));
+  document.querySelectorAll('#rp').forEach(l=>{l.setAttribute('y1',32-y);l.setAttribute('y2',-34);});at('cl','viewBox',`10 ${y-25} 50 50`);
+  const f=document.getElementById('fc');if(f)f.textContent=fuel(h).toFixed(1).replace('.',',');}
+function craneMount(){craneDraw();const b=$('#hb2');const top=()=>{b.disabled=true;$('#s2').textContent='Груз поднят на максимальную высоту';};if(S.h>=30)top();
+  holdBtn(b,(dt,on,tgt)=>{at('pf','opacity',on?(Math.sin(performance.now()/90)>0?.7:.2):0);
+    if(on)S.h=Math.min(30,S.h+dt*3);else{const t=tgt??Math.min(30,Math.ceil(S.h-1e-9));S.h=Math.min(t,S.h+dt*3);craneDraw();if(S.h>=t-1e-9){S.h=t;craneDraw();at('pf','opacity',0);return 'stop';}return t;}
+    craneDraw();if(S.h>=30){S.h=30;craneDraw();at('pf','opacity',0);top();return 'stop';}});}
+
+/* ---------- ответы по опыту ученика ---------- */
+const z1=()=>{const p=D.z1.p,dV=S.V-D.z1.V0,A=p*dV,Q=Math.round(D.z1.k*A);return {A,Q,dU:Q-A,part:dV?A/Q*100:NaN,ok:dV>0};};
+const z2=()=>{const F=fuel(S.h),A=D.z2.M*10*S.h/1000,Q=F*42;return {A,Q,eta:S.h?A/Q*100:NaN,Q2:Q-A,ok:S.h>0};};
+const nr=(o,x,d,u)=>o.ok?`${fmt(x,d)} ${u}`:'опыт не проведён';
+
+/* ---------- задачи ---------- */
+const fld=(k,lab,unit)=>`<div class="ans"><span class="lab">${lab} =</span><input class="num" id="f_${k}" inputmode="decimal" autocomplete="off" value="${S.raw[k]||''}"><span class="unit">${unit}</span></div>`;
+const PAGES=[
+ {n:1,title:'Задача 1. Первый закон термодинамики',mount:gasMount,
+  html:()=>`<div class="q">Газ находится в цилиндре под поршнем с грузом. Газ нагревают, при этом его давление не меняется. Проведите опыт и по показаниям приборов определите:</div>${gasSVG()}
+   <ol class="parts"><li>а) работу, совершённую газом;</li></ol>${fld('A1','A','Дж')}
+   <ol class="parts"><li>б) изменение внутренней энергии газа;</li></ol>${fld('dU','ΔU','Дж')}
+   <ol class="parts"><li>в) какая часть полученной газом теплоты пошла на совершение работы.</li></ol>${fld('part','A/Q','%')}`,
+  items:[{k:'A1',n:'1а) A, Дж',r:()=>nr(z1(),z1().A,0,'Дж')},{k:'dU',n:'1б) ΔU, Дж',r:()=>nr(z1(),z1().dU,0,'Дж')},{k:'part',n:'1в) A/Q, %',r:()=>nr(z1(),z1().part,1,'%')}]},
+ {n:2,title:'Задача 2. КПД подъёмного крана',mount:craneMount,
+  html:()=>`<div class="q">Подъёмный кран с дизельным двигателем поднимает бетонный блок. Поднимите блок на любую высоту и по показаниям приборов определите характеристики двигателя. Удельная теплота сгорания дизельного топлива 42 МДж/кг, <i>g</i> = 10 Н/кг.</div>${craneSVG()}
+   <ol class="parts"><li>а) Полезная работа двигателя.</li></ol>${fld('A2','A','кДж')}
+   <ol class="parts"><li>б) Количество теплоты, выделившееся при сгорании топлива.</li></ol>${fld('Q','Q','кДж')}
+   <ol class="parts"><li>в) КПД двигателя.</li></ol>${fld('eta','η','%')}
+   <ol class="parts"><li>г) Количество теплоты, отданное окружающей среде (холодильнику).</li></ol>${fld('Q2','Q<sub>2</sub>','кДж')}`,
+  items:[{k:'A2',n:'2а) A, кДж',r:()=>nr(z2(),z2().A,1,'кДж')},{k:'Q',n:'2б) Q, кДж',r:()=>nr(z2(),z2().Q,1,'кДж')},{k:'eta',n:'2в) η, %',r:()=>nr(z2(),z2().eta,1,'%')},{k:'Q2',n:'2г) Q₂, кДж',r:()=>nr(z2(),z2().Q2,1,'кДж')}]}
+];
+
+/* ---------- фото ---------- */
+function photoHTML(n){return `<div class="photo"><b>📷 Фото решения задачи ${n}</b><div class="small">Сфотографируйте решение в тетради (можно до 3 фото).</div><div class="thumbs" id="th${n}"></div>
+ <div class="phb" id="ad${n}"><label class="addph">📷 Камера<input type="file" accept="image/*" capture="environment" class="fi${n}" style="display:none"></label><label class="addph sec2">🖼 Из галереи<input type="file" accept="image/*" class="fi${n}" style="display:none"></label></div></div>`;}
+function drawThumbs(n){const t=$('#th'+n);if(!t)return;t.innerHTML=S.photos[n].map((p,i)=>`<div class="th"><img src="${p}"><button data-i="${i}">✕</button></div>`).join('');
+  t.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.photos[n].splice(+b.dataset.i,1);drawThumbs(n);});
+  $('#ad'+n).style.display=S.photos[n].length>=3?'none':'flex';}
+function shrink(file){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);
+  img.onload=()=>{const k=Math.min(1,1600/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.75));};
+  img.onerror=()=>rej();img.src=u;});}
+function photoMount(n){drawThumbs(n);document.querySelectorAll('.fi'+n).forEach(inp=>inp.onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{S.photos[n].push(await shrink(f));drawThumbs(n);}catch(_){modal('Не удалось открыть фото. Попробуйте ещё раз.','Хорошо',null);}});}
+
+/* ---------- экраны ---------- */
+function modal(html,ok='Да',cancel='Отмена'){return new Promise(res=>{const m=document.createElement('div');m.className='mod';m.innerHTML=`<div class="mbox"><div class="mt">${html}</div><div class="mb">${cancel?`<button class="btn sec" data-r="0">${cancel}</button>`:''}<button class="btn" data-r="1">${ok}</button></div></div>`;document.body.appendChild(m);m.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;m.remove();res(b.dataset.r==='1');});});}
+function keep(){document.querySelectorAll('input.num').forEach(i=>S.raw[i.id.slice(2)]=i.value);}
+function render(){
+  const app=$('#app');scrollTo(0,0);if(typeof pm!=='undefined'){pm.style.display='none';act=null;}
+  if(S.page<0){app.innerHTML=`<div class="card"><h1>Домашнее задание: первый закон термодинамики, КПД тепловых двигателей</h1>
+   <label class="f">Фамилия</label><input class="txt" id="sn" autocomplete="off" value="${S.who?esc(S.who.sn):''}" maxlength="40"><label class="f">Имя</label><input class="txt" id="nm" autocomplete="off" value="${S.who?esc(S.who.nm):''}" maxlength="40"><label class="f">Класс</label><input class="txt" id="cl" autocomplete="off" value="${esc(S.who?S.who.cl:DCLS)}" maxlength="10"></div>
+   ${DUNTIL?`<div class="card" style="font-weight:700;color:#8a3a00">⏰ Сдать до ${new Date(DUNTIL).toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}</div>`:''}<div class="card info"><ul style="padding-left:18px;margin:4px 0">
+   <li>2 задачи с опытами, у каждой несколько вопросов.</li><li><b>Ответы должны соответствовать последним значениям величин</b> в опыте (последним показаниям приборов).</li>
+   <li>Решите задачи в тетради, впишите ответы и прикрепите фото решения.</li>
+   <li>Можно сворачивать страницу и переходить между задачами.</li>
+   <li>Минус ставится кнопкой <b>«±»</b> над полем ввода. Десятичные дроби — через запятую.</li>
+   <li>После отправки вы увидите правильные ответы.</li></ul></div>
+   <button class="btn" id="go">Начать</button>`;
+   $('#go').onclick=()=>{const sn=$('#sn').value.trim(),nm=$('#nm').value.trim(),cl=$('#cl').value.trim();
+     if(!sn||!nm||!cl){modal('Заполните фамилию, имя и класс.','Хорошо',null);return;}S.who={sn,nm,cl};S.page=0;save();render();};return;}
+  if(S.page>=PAGES.length)return finish();
+  const pg=PAGES[S.page],last=S.page===PAGES.length-1;
+  app.innerHTML=`<div class="hdr">Задача ${S.page+1} из ${PAGES.length}</div><div class="card"><h1>${pg.title}</h1>${pg.html()}${photoHTML(pg.n)}</div>
+   <div class="row"><button class="btn sec" id="bk">← Назад</button><button class="btn" id="nx">${last?'Завершить':'Далее →'}</button></div>`;
+  photoMount(pg.n);pg.mount();
+  $('#bk').onclick=()=>{keep();S.page--;save();render();};
+  $('#nx').onclick=async()=>{keep();if(!last){S.page++;save();render();return;}
+    const emp=PAGES.flatMap(p=>p.items).filter(it=>!(S.raw[it.k]||'').trim()).length,noph=[1,2].filter(n=>!S.photos[n].length);
+    let t='Завершить и посмотреть правильные ответы?';
+    if(emp||noph.length)t=`${emp?`Не заполнено ответов: ${emp}.<br>`:''}${noph.length?`Нет фото решения: задача ${noph.join(' и ')}.<br>`:''}Всё равно отправить?`;
+    if(!await modal(t,'Отправить','Вернуться'))return;S.page++;render();};
+}
+function answersHTML(){const rows=PAGES.flatMap(p=>p.items).map(it=>`<tr><td>${it.n}</td><td>${(S.raw[it.k]||'').trim()?esc(S.raw[it.k]).replace('-','−'):'—'}</td><td><b>${it.r()}</b></td></tr>`).join('');
+  return `<div class="card"><h1>Правильные ответы</h1><table class="res"><tr><th>Вопрос</th><th>Ваш ответ</th><th>Правильный</th></tr>${rows}</table>
+   <div class="small">Сравните со своими ответами. Если не совпало — найдите ошибку в решении.</div></div>`;}
+function finish(){
+  const head=`<div class="card"><h1>Домашнее задание</h1><div>${esc(S.who.sn)} ${esc(S.who.nm)}, ${esc(S.who.cl)}</div><div class="st" id="snd"></div></div><div id="ansbox"></div><button class="btn sec" id="newst" style="display:none">Пройти ещё раз</button>`;
+  $('#app').innerHTML=head;
+  const other=()=>{const b=$('#newst');b.style.display='';b.onclick=async()=>{if(!await modal('Начать заново с новыми числами?','Да','Нет'))return;try{localStorage.removeItem(DKEY);}catch(e){}location.reload();};};
+  if(S.sent){$('#snd').textContent='Демо-версия: ответы никуда не отправлены';$('#ansbox').innerHTML=answersHTML();other();return;}
+  const txt=h=>String(h).replace(/<[^>]+>/g,'');
+  const r={k:CODE,fam:S.who.sn,nam:S.who.nm,cls:S.who.cl,
+    rows:PAGES.flatMap(p=>p.items).map(it=>({name:it.n,ans:(S.raw[it.k]||'').trim(),right:txt(it.r())})),
+    photos:[1,2].map(n=>S.photos[n].map(u=>u.split(',')[1])),
+    extra:`опыт 1: p = ${D.z1.p} кПа, V: ${D.z1.V0} → ${S.V} л, Q = ${z1().Q} Дж; опыт 2: m = ${D.z2.M} кг, h = ${S.h} м, топливо ${fuel(S.h).toFixed(1)} г; устройство: ${navigator.userAgent.slice(0,140)}`};
+  if(S.sending)return;S.sending=true;setTimeout(()=>S.sending=false,90000);
+  const el=$('#snd');el.style.color='#557';el.textContent='…';
+  const ok=j=>{S.sending=false;if(j&&j.ok){S.sent=true;save();el.style.color='';el.textContent='Демо-версия: ответы никуда не отправлены';$('#ansbox').innerHTML=answersHTML();other();}else fail(j&&j.error);};
+  const fail=e=>{S.sending=false;el.style.color='#c0392b';el.innerHTML=`Не отправилось${e?': '+esc(e):''}. <button class="btn" id="rs">Отправить ещё раз</button>`;$('#rs').onclick=finish;};
+  if(window.google&&google.script&&google.script.run)google.script.run.withSuccessHandler(ok).withFailureHandler(x=>fail(String(x&&x.message||x))).submit(r);
+  else if(!/^__/.test(SU))fetch(SU,{method:'POST',body:JSON.stringify(r)}).then(x=>x.json()).then(ok).catch(()=>fail('нет связи'));
+  else setTimeout(()=>ok({ok:true}),300);   // проверка без Google
+}
+
+/* ---------- кнопка ± ---------- */
+var pm=$('#pm'),act=null;
+function placePm(){if(!act)return;const r=act.getBoundingClientRect();pm.style.left=Math.max(4,r.right-52)+'px';pm.style.top=(r.top>56?r.top-50:r.bottom+6)+'px';}
+document.addEventListener('focusin',e=>{if(e.target.matches('input.num')){act=e.target;placePm();pm.style.display='block';}});
+document.addEventListener('focusout',()=>setTimeout(()=>{const a=document.activeElement;if(!a||!a.matches('input.num')){pm.style.display='none';act=null;}},150));
+addEventListener('scroll',placePm,true);addEventListener('resize',placePm);
+if(window.visualViewport)visualViewport.addEventListener('resize',placePm);
+pm.addEventListener('pointerdown',e=>{e.preventDefault();if(!act)return;const v=act.value.trim();act.value=/^[-−]/.test(v)?v.slice(1):'-'+v;});
+render();
+</script>
+</body>
+</html>
