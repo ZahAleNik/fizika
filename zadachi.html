@@ -1,1 +1,396 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Задачки 🧠</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:Nunito,system-ui,sans-serif;background:linear-gradient(160deg,#fff7d6 0%,#e3f1ff 100%);color:#1f2a44;
+  -webkit-user-select:none;user-select:none;min-height:100vh}
+.wrap{max-width:520px;margin:0 auto;padding:14px 14px 30px}
+.scr{display:none}.scr.on{display:block}
+h1{font-size:32px;font-weight:900;text-align:center;margin:18px 0 6px}
+h2{font-size:20px;font-weight:900;margin:18px 0 8px}
+.big-emo{font-size:76px;text-align:center;margin-top:14px}
+.lead{font-size:20px;text-align:center;line-height:1.4;margin:10px 6px 20px;font-weight:700}
+.btn{display:block;width:100%;border:0;border-radius:20px;padding:18px;font:900 24px Nunito,sans-serif;color:#fff;
+  background:#3b82f6;box-shadow:0 5px 0 #1d4ed8;cursor:pointer}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #1d4ed8}
+.btn.g{background:#22a55b;box-shadow:0 5px 0 #157a40}
+.btn.g:active{box-shadow:0 2px 0 #157a40}
+.dadbox{background:#fff;border:3px dashed #a5b4fc;border-radius:20px;padding:12px;margin-bottom:18px}
+.dadbox .h{font-weight:900;font-size:16px;color:#4338ca;margin-bottom:8px}
+.lv{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:2px solid #e2e8f0;background:#f8fafc;border-radius:14px;
+  padding:9px 10px;margin-bottom:7px;font:700 15px Nunito,sans-serif;color:#1f2a44;cursor:pointer}
+.lv b{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;border-radius:10px;background:#e0e7ff;color:#3730a3;font-size:18px;font-weight:900}
+.lv.on{border-color:#6366f1;background:#eef2ff}
+.lv small{display:block;color:#64748b;font-size:13px;font-weight:600}
 
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:17px;margin-bottom:8px}
+.stars{font-size:20px;letter-spacing:2px}
+.bar{height:10px;background:#dbe4f3;border-radius:6px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:#22a55b;width:0;transition:width .4s}
+.card{background:#fff;border-radius:22px;padding:18px 18px 16px;box-shadow:0 6px 18px rgba(31,42,68,.10);
+  font-size:23px;line-height:1.45;font-weight:700;min-height:150px}
+.card .tag{font-size:13px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.ansrow{display:flex;align-items:center;gap:12px;margin:16px 0 12px;font-size:24px;font-weight:900}
+.ans{flex:1;height:64px;border:3px solid #94a3b8;border-radius:16px;background:#fff;display:flex;align-items:center;
+  justify-content:center;font-size:38px;font-weight:900;color:#1f2a44;transition:border-color .2s}
+.ans.ok{border-color:#22a55b;background:#ecfdf3}
+.ans.bad{border-color:#f59e0b;background:#fff7e6}
+.shake{animation:sh .45s}
+@keyframes sh{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.fb{border-radius:16px;padding:0 14px;font-size:21px;font-weight:800;text-align:center;overflow:hidden;max-height:0;transition:all .25s}
+.fb.on{max-height:160px;padding:12px 14px;margin-bottom:12px}
+.fb.ok{background:#dcfce7;color:#166534}
+.fb.bad{background:#fff1d6;color:#9a5b00}
+.fb.show{background:#e0e7ff;color:#3730a3}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px}
+.k{height:58px;border:0;border-radius:16px;background:#fff;font:900 28px Nunito,sans-serif;color:#1f2a44;box-shadow:0 4px 0 #cbd5e1;cursor:pointer}
+.k:active{transform:translateY(3px);box-shadow:0 1px 0 #cbd5e1}
+.k.s{background:#f1f5f9;font-size:22px}
+
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+.mbox{background:#fff;border-radius:24px;padding:24px 20px;max-width:420px;width:100%;text-align:center}
+.mbox .e{font-size:64px}
+.mbox p{font-size:20px;font-weight:700;line-height:1.4;margin:10px 0 20px}
+
+.res{background:#fff;border-radius:22px;padding:16px 18px;font-size:20px;font-weight:700;line-height:1.7;margin:10px 0 18px;box-shadow:0 6px 18px rgba(31,42,68,.10)}
+.res b{font-weight:900}
+.tg{background:#d9f0d4;border-radius:16px 16px 16px 4px;padding:12px 14px;font:500 15px/1.45 system-ui,sans-serif;white-space:pre-wrap;color:#111;
+  box-shadow:0 1px 2px rgba(0,0,0,.15);-webkit-user-select:text;user-select:text}
+.tgwrap{background:#9ec3a0 url() ;background:linear-gradient(#a8c9a4,#8fb98c);border-radius:20px;padding:14px;margin:8px 0 18px}
+.tghead{font:700 13px system-ui;color:#fff;margin-bottom:6px;opacity:.9}
+.note{font-size:14px;color:#6b7280;text-align:center;margin-top:14px;line-height:1.35}
+.demo{display:inline-block;background:#fde68a;border-radius:8px;padding:2px 8px;font-weight:800;color:#92400e;font-size:13px}
+
+.burst{position:fixed;pointer-events:none;font-size:30px;z-index:60;animation:fly 1.1s ease-out forwards}
+@keyframes fly{0%{opacity:1;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.3)}}
+.msgbox{text-align:center;margin-top:60px}
+.msgbox .big-emo{font-size:90px}
+.sendst{font-size:19px;font-weight:800;text-align:center;border-radius:16px;padding:12px;margin:0 0 16px}
+.sendst.wait{background:#e0e7ff;color:#3730a3}.sendst.ok{background:#dcfce7;color:#166534}.sendst.err{background:#fee2e2;color:#991b1b}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="sMsg" class="scr on"><div class="msgbox"><div class="big-emo" id="mE">⏳</div><h1 id="mT">Загружаю…</h1>
+    <div class="lead" id="mL"></div><button class="btn" id="bRetry" style="display:none">Попробовать ещё раз</button></div></section>
+
+  <section id="sStart" class="scr">
+    <div class="big-emo">🧠✏️</div>
+    <h1>Решаем задачки!</h1>
+    <div class="lead">Тебя ждут <b>5 задач</b>.<br>Читай внимательно и думай 🙂<br><br>
+      Пока решаешь, пожалуйста, не уходи со страницы — папа увидит, если ты отвлечёшься.</div>
+    <button class="btn g" id="bStart">Начать ▶</button>
+  </section>
+
+  <section id="sTask" class="scr">
+    <div class="top"><span id="num">Задача 1 из 5</span><span class="stars" id="stars"></span></div>
+    <div class="bar"><i id="barI"></i></div>
+    <div class="card"><div class="tag" id="tag">Задача</div><div id="text"></div></div>
+    <div class="ansrow">Ответ: <div class="ans" id="ans"></div></div>
+    <div class="fb" id="fb"></div>
+    <div class="keys" id="keys"></div>
+    <button class="btn" id="bMain">Проверить</button>
+  </section>
+
+  <section id="sFin" class="scr">
+    <div class="big-emo">🏆</div>
+    <h1>Ура! Все задачи решены!</h1>
+    <div class="res" id="resBox"></div>
+    <div class="sendst wait" id="sendSt">📨 Отправляю папе…</div>
+    <button class="btn" id="bResend" style="display:none">Отправить ещё раз</button>
+  </section>
+</div>
+
+<div class="modal" id="mAway"><div class="mbox">
+  <div class="e">🙈</div>
+  <p>Ой, ты ненадолго ушёл со страницы!<br>Давай не будем отвлекаться — папа увидит, сколько раз ты уходил.<br>Возвращаемся к задачке 🙂</p>
+  <button class="btn" id="bBack">Продолжаю!</button>
+</div></div>
+
+<script>
+const SU='https://script.google.com/macros/s/AKfycbwcaDQf9mi2YIf-ps0gLBcWxeWgTOtHeWPnfF1r-F5tVLn59UJWb0usseJkpbEEx5gtUw/exec';
+/* ================= ОБЩЕЕ ================= */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const R2=(a,b)=>{let n,i=0;do{n=R(a,b);i++}while(n%10===1&&n%100!==11&&i<60);return n}; // не на 1 (для «ехали 25 пассажиров»)
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function pl(n,f){n=Math.abs(n)%100;const d=n%10;if(n>10&&n<20)return f[2];if(d===1)return f[0];if(d>=2&&d<=4)return f[1];return f[2]}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const BOYS=[['Петя','Пети'],['Ваня','Вани'],['Дима','Димы'],['Саша','Саши'],['Миша','Миши'],['Артём','Артёма'],['Тимур','Тимура'],['Арман','Армана'],['Ерлан','Ерлана'],['Данияр','Данияра'],['Костя','Кости'],['Алихан','Алихана']];
+const GIRLS=[['Маша','Маши'],['Оля','Оли'],['Катя','Кати'],['Аня','Ани'],['Даша','Даши'],['Айгерим','Айгерим'],['Алия','Алии'],['Лена','Лены'],['Соня','Сони'],['Дана','Даны'],['Амина','Амины'],['Полина','Полины']];
+const mk=(x,m)=>({n:x[0],gen:x[1],m});
+const boy=()=>mk(pick(BOYS),1), girl=()=>mk(pick(GIRLS),0);
+const kid=()=>Math.random()<.5?boy():girl();
+function two(){let p=kid(),q;do{q=kid()}while(q.n===p.n);return[p,q]}
+const V=(p,m,f)=>p.m?m:f;
+const MORE=()=>Math.random()<.5;
+const C=m=>m?'больше':'меньше';
+const MUL=[2,3,4];
+
+// существительные: f — [1, 2–4, 5+] им. п.; a — вин. п., если отличается
+const NN={
+ yabl:{f:['яблоко','яблока','яблок']}, grush:{f:['груша','груши','груш'],a:['грушу','груши','груш']},
+ kon:{f:['конфета','конфеты','конфет'],a:['конфету','конфеты','конфет']}, grib:{f:['гриб','гриба','грибов']},
+ oreh:{f:['орех','ореха','орехов']}, shar:{f:['шарик','шарика','шариков']},
+ mash:{f:['машинка','машинки','машинок'],a:['машинку','машинки','машинок']},
+ nak:{f:['наклейка','наклейки','наклеек'],a:['наклейку','наклейки','наклеек']},
+ mar:{f:['марка','марки','марок'],a:['марку','марки','марок']}, kar:{f:['карандаш','карандаша','карандашей']},
+ str:{f:['страница','страницы','страниц'],a:['страницу','страницы','страниц']},
+ kn:{f:['книга','книги','книг']}, pas:{f:['пассажир','пассажира','пассажиров']}, ptc:{f:['птица','птицы','птиц']},
+ avto:{f:['машина','машины','машин']}, utk:{f:['утка','утки','уток']}, uch:{f:['ученик','ученика','учеников']},
+ det:{f:['ребёнок','ребёнка','детей']}, tul:{f:['тюльпан','тюльпана','тюльпанов']}, roz:{f:['роза','розы','роз']},
+ rom:{f:['ромашка','ромашки','ромашек']}, ryb:{f:['рыба','рыбы','рыб'],a:['рыбу','рыбы','рыб']},
+ bul:{f:['булочка','булочки','булочек'],a:['булочку','булочки','булочек']}, pir:{f:['пирожок','пирожка','пирожков']},
+ kub:{f:['кубик','кубика','кубиков']}, tetr:{f:['тетрадь','тетради','тетрадей']},
+ yag:{f:['ягода','ягоды','ягод'],a:['ягоду','ягоды','ягод']}, mach:{f:['мяч','мяча','мячей']},
+ shish:{f:['шишка','шишки','шишек'],a:['шишку','шишки','шишек']}, stul:{f:['стул','стула','стульев']},
+ kol:{f:['колесо','колеса','колёс']}, lap:{f:['лапа','лапы','лап']}, nog:{f:['нога','ноги','ног']}, nozh:{f:['ножка','ножки','ножек']}
+};
+const W=(n,k,c)=>n+' '+pl(n,(c==='a'&&NN[k].a)||NN[k].f);
+const G=k=>NN[k].f[2];
+const ITEMS=['shar','mash','nak','mar','kar','kub','mach','oreh','kon'];
+const FLOW=['tul','roz','rom'];
+
+/* ========== УРОВЕНЬ 1: было → изменили → изменили → стало ========== */
+const L1=[
+ ()=>({s:n=>`В корзине лежали ${W(n,'yabl')}.`,add:pick(['мама положила','бабушка положила']),rem:pick(['дети взяли','из корзины взяли']),q:v=>`Сколько яблок ${v} в корзине?`}),
+ ()=>({s:n=>`В вазе было ${W(n,'kon')}.`,add:pick(['мама положила','бабушка положила']),rem:'дети съели',q:v=>`Сколько конфет ${v} в вазе?`}),
+ ()=>({s:n=>`В автобусе ехали ${W(n,'pas')}.`,add:'вошли',rem:'вышли',pre:['На первой остановке','На второй остановке'],q:v=>`Сколько пассажиров ${v} в автобусе?`}),
+ ()=>({s:n=>`На ветке сидели ${W(n,'ptc')}.`,add:'прилетели',rem:'улетели',q:v=>`Сколько птиц ${v} на ветке?`}),
+ ()=>({s:n=>`На стоянке стояли ${W(n,'avto')}.`,add:'приехали',rem:'уехали',q:v=>`Сколько машин ${v} на стоянке?`}),
+ ()=>({s:n=>`На пруду плавали ${W(n,'utk')}.`,add:'приплыли',rem:'уплыли',q:v=>`Сколько уток ${v} на пруду?`}),
+ ()=>({s:n=>`На полке стояли ${W(n,'kn')}.`,add:'библиотекарь поставил',rem:'ребята взяли',q:v=>`Сколько книг ${v} на полке?`}),
+ ()=>({s:n=>`В спортзале играли ${W(n,'det')}.`,add:'пришли',rem:'ушли',q:v=>`Сколько детей ${v} в спортзале?`}),
+ ()=>({s:n=>`У белки в дупле было ${W(n,'oreh')}.`,add:'она нашла',rem:'она съела',q:v=>`Сколько орехов ${v} у белки?`}),
+ ()=>({s:n=>`В коробке было ${W(n,'kar')}.`,add:'папа положил',rem:'ребята взяли',q:v=>`Сколько карандашей ${v} в коробке?`}),
+ ()=>{const p=kid(),x=pick(['nak','mar','shar','kon']);
+   return{s:n=>`У ${p.gen} было ${W(n,x)}.`,add:V(p,'мама подарила ему','мама подарила ей'),rem:V(p,'он отдал другу','она отдала подруге'),q:v=>`Сколько ${G(x)} ${v} у ${p.gen}?`}},
+];
+function lev1(){
+  const c=pick(L1)(),ops=pick([[1,1],[-1,1],[1,-1],[-1,-1]]);
+  let a,b,d,m,f,i=0;
+  do{a=R2(10,70);b=R(2,25);d=R(2,25);m=a+ops[0]*b;f=m+ops[1]*d;i++}while((m<1||m>100||f<1||f>100)&&i<500);
+  const pre=c.pre||['Потом','А потом'];
+  const act=(op,x,second)=>{let v=op>0?c.add:c.rem;
+    const esh=(op>0&&!second)||(second&&ops[0]===op)?' ещё':'';
+    return `${pre[second?1:0]} ${v}${esh} ${x}.`};
+  const verb=(ops[0]<0&&ops[1]<0)?'осталось':'стало';
+  return{t:`${c.s(a)} ${act(ops[0],b,0)} ${act(ops[1],d,1)} ${c.q(verb)}`,a:f};
+}
+
+/* ========== УРОВЕНЬ 2: на … больше/меньше → сколько вместе ========== */
+const L2=[
+ (a,b,m)=>{const p=kid();return`${p.n} в первый день ${V(p,'прочитал','прочитала')} ${W(a,'str','a')}, а во второй — на ${b} ${C(m)}. Сколько страниц ${V(p,'он прочитал','она прочитала')} за два дня?`},
+ (a,b,m)=>{const p=kid(),x=pick(['grib','yag','shish','oreh']);return`${p.n} в первый день ${V(p,'собрал','собрала')} ${W(a,x,'a')}, а во второй — на ${b} ${C(m)}. Сколько ${G(x)} ${V(p,'он собрал','она собрала')} за два дня?`},
+ (a,b,m)=>{const[p,q]=two(),x=pick(ITEMS);return`У ${p.gen} ${W(a,x)}, а у ${q.gen} на ${b} ${C(m)}. Сколько ${G(x)} у них вместе?`},
+ (a,b,m)=>{const f=[...FLOW].sort(()=>Math.random()-.5);return`В букете ${W(a,f[0])}, а ${G(f[1])} на ${b} ${C(m)}. Сколько всего цветов в букете?`},
+ (a,b,m)=>`В первом классе ${W(a,'uch')}, а во втором — на ${b} ${C(m)}. Сколько учеников в двух классах?`,
+ (a,b,m)=>{const p=kid();return`Папа поймал ${W(a,'ryb','a')}, а ${p.n} — на ${b} ${C(m)}. Сколько рыб они поймали вместе?`},
+ (a,b,m)=>`Утром в пекарне продали ${W(a,'bul','a')}, а вечером — на ${b} ${C(m)}. Сколько булочек продали за день?`,
+ (a,b,m)=>`В первой коробке ${W(a,'kar')}, а во второй — на ${b} ${C(m)}. Сколько карандашей в двух коробках?`,
+ (a,b,m)=>`На первой грядке выросло ${W(a,'tul')}, а на второй — на ${b} ${C(m)}. Сколько тюльпанов выросло на двух грядках?`,
+];
+function lev2(){const m=MORE();let a,b;do{a=R(8,45);b=R(2,12)}while(m?2*a+b>100:a-b<2);
+  return{t:pick(L2)(a,b,m),a:m?2*a+b:2*a-b}}
+
+/* ========== УРОВЕНЬ 3: «это на … больше/меньше, чем…» → сколько вместе ========== */
+const L3=[
+ (a,b,m)=>{const p=kid();return`В понедельник ${p.n} ${V(p,'прочитал','прочитала')} ${W(a,'str','a')} — это на ${b} ${C(m)}, чем во вторник. Сколько страниц ${V(p,'он прочитал','она прочитала')} за два дня?`},
+ (a,b,m)=>{const p=kid(),x=pick(['grib','yag','shish','oreh']);return`В первый день ${p.n} ${V(p,'собрал','собрала')} ${W(a,x,'a')} — это на ${b} ${C(m)}, чем во второй день. Сколько ${G(x)} ${V(p,'он собрал','она собрала')} за два дня?`},
+ (a,b,m)=>{const[p,q]=two(),x=pick(ITEMS);return`У ${p.gen} ${W(a,x)} — это на ${b} ${C(m)}, чем у ${q.gen}. Сколько ${G(x)} у них вместе?`},
+ (a,b,m)=>{const f=[...FLOW].sort(()=>Math.random()-.5);return`В букете ${W(a,f[0])} — это на ${b} ${C(m)}, чем ${G(f[1])}. Сколько всего цветов в букете?`},
+ (a,b,m)=>`В первом классе ${W(a,'uch')} — это на ${b} ${C(m)}, чем во втором. Сколько учеников в двух классах?`,
+ (a,b,m)=>{const p=kid();return`${p.n} ${V(p,'поймал','поймала')} ${W(a,'ryb','a')} — это на ${b} ${C(m)}, чем папа. Сколько рыб они поймали вместе?`},
+ (a,b,m)=>`Утром в пекарне продали ${W(a,'bul','a')} — это на ${b} ${C(m)}, чем вечером. Сколько булочек продали за день?`,
+ (a,b,m)=>`В первой коробке ${W(a,'kar')} — это на ${b} ${C(m)}, чем во второй. Сколько карандашей в двух коробках?`,
+];
+function lev3(){const m=MORE();let a,b;do{a=R(8,45);b=R(2,12)}while(m?a-b<2:2*a+b>100);
+  return{t:pick(L3)(a,b,m),a:m?2*a-b:2*a+b}}
+
+/* ========== УРОВЕНЬ 4: умножение (на 2, 3, 4) ========== */
+function nk(){return Math.random()<.5?[R(2,10),pick(MUL)]:[pick(MUL),R(2,10)]}
+const L4=[
+ ()=>{const[n,k]=nk();return{t:`В одной тарелке ${W(k,'yabl')}. Сколько яблок в ${n} тарелках?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`В одном пакете ${W(k,'grush')}. Сколько груш в ${n} пакетах?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`В одной коробке ${W(k,'kar')}. Сколько карандашей в ${n} коробках?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`В одной вазе ${W(k,'roz')}. Сколько роз в ${n} вазах?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`В одном ряду ${W(k,'stul')}. Сколько стульев в ${n} рядах?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`В одной пачке ${W(k,'tetr')}. Сколько тетрадей в ${n} пачках?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`Каждому из ${n} детей дали по ${W(k,'kon','a')}. Сколько конфет раздали?`,a:n*k}},
+ ()=>{const[n,k]=nk();return{t:`На одной ветке сидят ${W(k,'ptc')}. Сколько птиц на ${n} ветках?`,a:n*k}},
+ ()=>{const n=R(2,10);return{t:`У машины 4 колеса. Сколько колёс у ${n} машин?`,a:4*n}},
+ ()=>{const n=R(2,10);return{t:`У велосипеда 2 колеса. Сколько колёс у ${n} велосипедов?`,a:2*n}},
+ ()=>{const n=R(2,10);return{t:`У трёхколёсного велосипеда 3 колеса. Сколько колёс у ${n} таких велосипедов?`,a:3*n}},
+ ()=>{const n=R(2,10);return{t:`У кошки 4 лапы. Сколько лап у ${n} кошек?`,a:4*n}},
+ ()=>{const n=R(2,10);return{t:`У курицы 2 ноги. Сколько ног у ${n} куриц?`,a:2*n}},
+ ()=>{const n=R(2,10);return{t:`У стула 4 ножки. Сколько ножек у ${n} стульев?`,a:4*n}},
+];
+function lev4(){return pick(L4)()}
+
+/* ========== УРОВНИ 5 и 6: «в … раза больше» (5 — сколько у второго, 6 — сколько вместе) ========== */
+const L56=[
+ (a,k,all)=>{const[p,q]=two(),x=pick(ITEMS);return`У ${p.gen} ${W(a,x)}, а у ${q.gen} в ${k} раза больше. `+(all?`Сколько ${G(x)} у них вместе?`:`Сколько ${G(x)} у ${q.gen}?`)},
+ (a,k,all)=>{const f=[...FLOW].sort(()=>Math.random()-.5);return`В букете ${W(a,f[0])}, а ${G(f[1])} в ${k} раза больше. `+(all?`Сколько всего цветов в букете?`:`Сколько ${G(f[1])} в букете?`)},
+ (a,k,all)=>{const p=kid();return`${p.n} ${V(p,'поймал','поймала')} ${W(a,'ryb','a')}, а папа — в ${k} раза больше. `+(all?`Сколько рыб они поймали вместе?`:`Сколько рыб поймал папа?`)},
+ (a,k,all)=>`Утром сорвали ${W(a,'yabl')}, а вечером — в ${k} раза больше. `+(all?`Сколько яблок сорвали за день?`:`Сколько яблок сорвали вечером?`),
+ (a,k,all)=>{const p=kid();return`В понедельник ${p.n} ${V(p,'прочитал','прочитала')} ${W(a,'str','a')}, а во вторник — в ${k} раза больше. `+(all?`Сколько страниц ${V(p,'он прочитал','она прочитала')} за два дня?`:`Сколько страниц ${V(p,'он прочитал','она прочитала')} во вторник?`)},
+ (a,k,all)=>`Утром в пекарне продали ${W(a,'bul','a')}, а вечером — в ${k} раза больше. `+(all?`Сколько булочек продали за день?`:`Сколько булочек продали вечером?`),
+ (a,k,all)=>{const p=kid(),x=pick(['grib','yag','shish']);return`В первый день ${p.n} ${V(p,'собрал','собрала')} ${W(a,x,'a')}, а во второй — в ${k} раза больше. `+(all?`Сколько ${G(x)} ${V(p,'он собрал','она собрала')} за два дня?`:`Сколько ${G(x)} ${V(p,'он собрал','она собрала')} во второй день?`)},
+ (a,k,all)=>`В первом аквариуме ${W(a,'ryb')}, а во втором — в ${k} раза больше. `+(all?`Сколько рыб в двух аквариумах?`:`Сколько рыб во втором аквариуме?`),
+];
+function lev5(){const k=pick(MUL),a=R(2,Math.min(25,Math.floor(100/k)));return{t:pick(L56)(a,k,0),a:a*k}}
+function lev6(){const k=pick(MUL),a=R(2,Math.floor(100/(k+1)));return{t:pick(L56)(a,k,1),a:a*k+a}}
+
+const LEVELS=[
+ {f:lev1,n:'Было — изменили — стало',d:'было 35, вошли 7, вышли 12. Сколько стало?'},
+ {f:lev2,n:'На … больше / меньше, сколько вместе',d:'у Маши 23, у Армана на 5 больше'},
+ {f:lev3,n:'«Это на … больше, чем…»',d:'у Маши 23 — это на 5 больше, чем у Армана'},
+ {f:lev4,n:'Умножение',d:'в тарелке 3 яблока, сколько в 6 тарелках'},
+ {f:lev5,n:'В … раза больше',d:'у Маши 8, у Армана в 3 раза больше. Сколько у Армана?'},
+ {f:lev6,n:'В … раза больше, сколько вместе',d:'… Сколько у них вместе?'},
+ {f:null,n:'🎲 Всё вперемешку',d:'уровни 1–6 случайно'},
+];
+function makeTask(L){
+  for(let i=0;i<200;i++){const lv=L===7?R(1,6):L;const t=LEVELS[lv-1].f();
+    if(t&&t.a>=1&&t.a<=100&&!/NaN|undefined/.test(t.t)&&!usedTexts.has(t.t.slice(0,25))){t.lv=lv;usedTexts.add(t.t.slice(0,25));return t}}
+  const t=LEVELS[(L===7?1:L)-1].f();t.lv=L;return t;
+}
+
+/* ================= ИНТЕРФЕЙС ================= */
+const TOTAL=5;
+const $=id=>document.getElementById(id);
+const CODE=(new URLSearchParams(location.search).get('t')||'').replace(/[^a-z0-9]/gi,'').slice(0,16);
+const SKEY='zk_'+CODE;
+let S=null,usedTexts=new Set(),input='',actx=null,wake=null;
+// S = {lv, tasks:[{t,a,lv}], i, tries, revealed, solved, ts, results:[], leaves, t0, fin, sec, sent}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(SKEY)||'null')}catch(e){return null}}
+function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id===id));scrollTo(0,0)}
+function msg(e,t,l,retry){$('mE').textContent=e;$('mT').textContent=t;$('mL').innerHTML=l||'';$('bRetry').style.display=retry?'block':'none';show('sMsg')}
+
+async function init(){
+  if(!CODE)return msg('🤔','Ссылка неполная','Попроси папу прислать ссылку ещё раз 🙂');
+  msg('⏳','Загружаю…','');
+  let r;
+  try{r=await (await fetch(SU+'?action=check&t='+CODE)).json()}
+  catch(e){return msg('📶','Нет связи','Проверь интернет и нажми кнопку 🙂',true)}
+  if(!r.ok){
+    if(r.why==='done')return msg('👍','Задания уже выполнены','Молодец! Папа уже получил результат 😊');
+    if(r.why==='closed')return msg('🔒','Ссылка закрыта','Попроси папу прислать новую 🙂');
+    return msg('🤔','Ссылка не найдена','Попроси папу прислать ссылку ещё раз 🙂');
+  }
+  const old=load();
+  if(old&&old.lv===r.lv&&old.tasks){S=old;
+    if(S.fin){showFin();return send()}
+    show('sTask');render();$('mAway').classList.add('on');lock();return}
+  S={lv:r.lv,tasks:null};show('sStart');
+}
+$('bRetry').onclick=init;
+
+const KL=['1','2','3','4','5','6','7','8','9','⌫','0','C'];
+$('keys').innerHTML=KL.map(k=>`<button class="k${/\d/.test(k)?'':' s'}" data-k="${k}">${k}</button>`).join('');
+$('keys').addEventListener('click',e=>{const b=e.target.closest('.k');if(b)press(b.dataset.k)});
+document.addEventListener('keydown',e=>{if(!$('sTask').classList.contains('on')||$('mAway').classList.contains('on'))return;
+  if(/^\d$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('⌫');else if(e.key==='Enter')$('bMain').click()});
+function press(k){if(S.solved)return;
+  if(k==='⌫')input=input.slice(0,-1);else if(k==='C')input='';else if(input.length<3)input=(input==='0'?'':input)+k;
+  $('ans').textContent=input;$('ans').className='ans'}
+
+const PRAISE=['Молодец!','Отлично!','Умница!','Здорово!','Так держать!','Супер!','Правильно! Ты настоящий математик!','Верно! Ты молодец!','Блестяще!','Вот это да! Верно!'];
+const EMO=['🎉','🌟','👍','🏆','🥳','💪','⭐','🚀'];
+const WRONG=['Подумай ещё 🙂','Почти! Попробуй ещё раз','Не совсем. Перечитай задачу внимательно 🧐','Ошибочка. Подумай ещё раз 🙂'];
+const SHOWANS=a=>`Правильный ответ: <b style="font-size:28px">${a}</b><br><span style="font-size:17px">Впиши его и нажми «Проверить»</span>`;
+
+function stars(){let s='';for(let i=0;i<TOTAL;i++)s+=S.results[i]?(S.results[i].tries.length===1?'⭐':'✔️'):'○';$('stars').textContent=s}
+function fb(m,cls){const f=$('fb');if(!m){f.className='fb';f.innerHTML='';return}f.className='fb on '+cls;f.innerHTML=m}
+function render(){
+  const c=S.tasks[S.i];input='';
+  $('num').textContent=`Задача ${S.i+1} из ${TOTAL}`;$('tag').textContent='Задача '+(S.i+1);$('text').textContent=c.t;
+  $('ans').textContent=S.solved?c.a:'';$('ans').className=S.solved?'ans ok':'ans';
+  if(S.solved){fb('✔️ Верно!','ok');setMain(true)}
+  else{fb(S.revealed?SHOWANS(c.a):'',S.revealed?'show':'');setMain(false)}
+  $('barI').style.width=((S.i+(S.solved?1:0))/TOTAL*100)+'%';stars();
+}
+function setMain(done){$('bMain').textContent=done?(S.i>=TOTAL-1?'Готово! 🏁':'Следующая задача →'):'Проверить';$('bMain').className=done?'btn g':'btn'}
+function startTasks(){
+  usedTexts=new Set();const tasks=[];for(let i=0;i<TOTAL;i++){const t=makeTask(S.lv);tasks.push({t:t.t,a:t.a,lv:t.lv})}
+  Object.assign(S,{tasks,i:0,tries:[],revealed:false,solved:false,ts:Date.now(),results:[],leaves:0,t0:Date.now(),fin:false,sent:false});
+  save();show('sTask');render();lock();
+}
+$('bStart').onclick=()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}startTasks()};
+
+$('bMain').onclick=()=>{
+  const c=S.tasks[S.i];
+  if(S.solved){
+    if(S.i>=TOTAL-1){S.fin=true;S.sec=Math.round((Date.now()-S.t0)/1000);save();showFin();send();return}
+    S.i++;S.tries=[];S.revealed=false;S.solved=false;S.ts=Date.now();save();render();return}
+  if(input===''){shake();return}
+  const v=parseInt(input,10);S.tries.push(v);
+  if(v===c.a){
+    S.solved=true;$('ans').className='ans ok';
+    if(S.revealed)fb('✔️ Теперь верно! В следующий раз получится самому 💪','ok');
+    else{fb(`${pick(EMO)} ${pick(PRAISE)}`,'ok');burst()}
+    beep(true);
+    S.results.push({t:c.t,a:c.a,lv:c.lv,tries:S.tries.slice(),sec:Math.round((Date.now()-S.ts)/1000)});
+    save();stars();$('barI').style.width=((S.i+1)/TOTAL*100)+'%';setMain(true);
+  }else{
+    $('ans').className='ans bad';shake();beep(false);
+    if(S.tries.length>=3)S.revealed=true;
+    save();fb(S.revealed?SHOWANS(c.a):pick(WRONG),S.revealed?'show':'bad');
+    input='';setTimeout(()=>{if(!S.solved)$('ans').textContent=''},600);
+  }
+};
+function shake(){const a=$('ans');a.classList.remove('shake');void a.offsetWidth;a.classList.add('shake')}
+const mmss=s=>`${Math.floor(s/60)} мин ${s%60} с`;
+
+function showFin(){
+  const f=S.results.filter(r=>r.tries.length===1).length,rev=S.results.filter(r=>r.tries.length>=4).length;
+  $('resBox').innerHTML=`⭐ С первого раза: <b>${f} из ${TOTAL}</b><br>✔️ Со 2-й или 3-й попытки: <b>${TOTAL-f-rev}</b><br>👀 С подсказкой: <b>${rev}</b><br>⏱ Время: <b>${mmss(S.sec||0)}</b>`;
+  show('sFin');
+}
+function st(cls,t){$('sendSt').className='sendst '+cls;$('sendSt').textContent=t}
+let sending=false;
+async function send(){
+  if(sending)return;sending=true;$('bResend').style.display='none';
+  if(S.sent){st('ok','✅ Папа получил результат!');sending=false;return}
+  st('wait','📨 Отправляю папе…');
+  const body=JSON.stringify({kind:'res',t:CODE,lv:S.lv,sec:S.sec,leaves:S.leaves,rows:S.results});
+  for(let k=0;k<6;k++){
+    try{const r=await (await fetch(SU,{method:'POST',body})).json();
+      if(r.ok){S.sent=true;save();st('ok','✅ Папа получил результат!');sending=false;return}
+      if(r.why==='closed'){st('err','🔒 Папа закрыл эту ссылку');sending=false;return}
+      if(r.why==='none'){st('err','🤔 Ссылка не найдена');sending=false;return}
+    }catch(e){}
+    st('wait',`📨 Отправляю папе… (попытка ${k+2})`);await new Promise(r=>setTimeout(r,5000));
+  }
+  st('err','Не получилось отправить. Проверь интернет 📶');$('bResend').style.display='block';sending=false;
+}
+$('bResend').onclick=send;
+
+let wasHidden=false;
+document.addEventListener('visibilitychange',()=>{
+  if(!S||!S.tasks||S.fin)return;
+  if(document.hidden){wasHidden=true;S.leaves++;save()}
+  else if(wasHidden){wasHidden=false;$('mAway').classList.add('on');lock()}
+});
+$('bBack').onclick=()=>{$('mAway').classList.remove('on');try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}};
+async function lock(){try{if('wakeLock' in navigator)wake=await navigator.wakeLock.request('screen')}catch(e){}}
+
+function beep(ok){if(!actx)return;try{const t=actx.currentTime;(ok?[660,880,1100]:[300,220]).forEach((f,i)=>{
+  const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type=ok?'triangle':'sine';
+  g.gain.setValueAtTime(.0001,t+i*.11);g.gain.exponentialRampToValueAtTime(.25,t+i*.11+.02);g.gain.exponentialRampToValueAtTime(.0001,t+i*.11+.22);
+  o.connect(g).connect(actx.destination);o.start(t+i*.11);o.stop(t+i*.11+.25)})}catch(e){}}
+function burst(){const r=$('ans').getBoundingClientRect();for(let i=0;i<14;i++){const s=document.createElement('div');s.className='burst';
+  s.textContent=pick(['⭐','🎉','✨','🌟','💛']);s.style.left=(r.left+r.width/2-15)+'px';s.style.top=r.top+'px';
+  const ang=Math.random()*Math.PI*2,d=R(80,170);s.style.setProperty('--dx',Math.cos(ang)*d+'px');s.style.setProperty('--dy',(Math.sin(ang)*d-60)+'px');
+  document.body.appendChild(s);setTimeout(()=>s.remove(),1200)}}
+init();
+</script>
+</body>
+</html>
