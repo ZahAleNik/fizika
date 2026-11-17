@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ЕНТ — онлайн-тестирование</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Arial,sans-serif;background:#f1f5f9}
+header{
+  height:56px;
+  background:#1647a5;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:19px;
+  font-weight:bold
+}
+iframe{
+  display:block;
+  width:100%;
+  height:calc(100vh - 56px);
+  border:0
+}
+.notice{
+  max-width:500px;
+  margin:50px auto;
+  padding:20px;
+  text-align:center
+}
+</style>
+</head>
+<body>
+<header>ЕНТ · Онлайн-тестирование</header>
+<iframe id="app" title="Пробный ЕНТ"></iframe>
+
+<script>
+const GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbzvoMNjElhxNlMOda9CLusFM2pp12zKTPS6fypLeWzjIYh8Gka7Cfz1lvRK5eYWPi43/exec';
+
+const params=new URLSearchParams(location.search);
+const session=params.get('session');
+
+if(!session) {
+  document.getElementById('app').remove();
+  const p=document.createElement('p');
+  p.className='notice';
+  p.textContent='Тестирование не найдено. Откройте ссылку из QR-кода.';
+  document.body.append(p);
+} else {
+  const url=new URL(GOOGLE_SCRIPT_URL);
+  url.searchParams.set('session',session);
+  document.getElementById('app').src=url.toString();
+}
+</script>
+</body>
+</html>
