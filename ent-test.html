@@ -20,6 +20,8 @@ button:disabled{opacity:.5}
 .question h3{font-size:17px;margin:0 0 8px}
 .option{display:flex;gap:10px;align-items:center;padding:12px;border:1px solid #cbd5e1;border-radius:9px;margin:9px 0;cursor:pointer}
 .option.sel{background:#eaf1ff;border-color:#1954c5}
+.subj{padding:14px;border:1px solid #cbd5e1;border-radius:10px;margin:8px 0;font-size:16px;cursor:pointer;background:#fff;user-select:none}
+.subj.sel{background:#1954c5;border-color:#1954c5;color:#fff;font-weight:bold}
 .hidden{display:none}
 .muted{color:#64748b}
 .error{color:#b91c1c}
@@ -39,8 +41,8 @@ button:disabled{opacity:.5}
 <label class="field" for="cls">Класс</label>
 <input id="cls" type="text" placeholder="11А" maxlength="30">
 
-<label class="field" for="subject">Предмет</label>
-<select id="subject"><option value="">Загрузка...</option></select>
+<label class="field">Предмет</label>
+<div id="subjects"></div>
 
 <button id="start" onclick="begin()">Начать тестирование</button>
 <p id="entryError" class="error"></p>
@@ -92,38 +94,34 @@ async function apiPost(data) {
   return d;
 }
 
-async function loadSubjects() {
-  if (!SESSION) {
-    el('entryError').textContent = 'Неверная ссылка: отсканируйте QR-код заново.';
-    el('start').disabled = true;
-    return;
-  }
-  try {
-    const d = await apiGet({ action: 'subjects', session: SESSION });
-    const s = el('subject');
-    s.replaceChildren();
-    const first = document.createElement('option');
-    first.value = ''; first.textContent = 'Выберите предмет';
-    s.append(first);
-    d.subjects.forEach(x => {
-      const o = document.createElement('option');
-      o.value = x; o.textContent = x;
-      s.append(o);
-    });
-  } catch (e) {
-    el('entryError').textContent = e.message;
-    el('start').disabled = true;
-  }
+// Предметы — прямо здесь, список появляется сразу, без загрузки.
+// (Должен совпадать с SUBJECTS в Code.gs.)
+const SUBJECTS = ['Динамика', 'Химия', 'Биология', 'Информатика', 'Всемирная история'];
+let subject = '';
+
+SUBJECTS.forEach(s => {
+  const b = document.createElement('div');
+  b.className = 'subj';
+  b.textContent = s;
+  b.onclick = () => {
+    subject = s;
+    document.querySelectorAll('.subj').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+  };
+  el('subjects').append(b);
+});
+
+if (!SESSION) {
+  el('entryError').textContent = 'Неверная ссылка: отсканируйте QR-код заново.';
+  el('start').disabled = true;
 }
-loadSubjects();
 
 async function begin() {
   const name = el('name').value.trim();
   const cls = el('cls').value.trim();
-  const subject = el('subject').value;
 
   if (name.length < 3 || !cls || !subject) {
-    el('entryError').textContent = 'Заполните все поля.';
+    el('entryError').textContent = !subject ? 'Выберите предмет.' : 'Заполните все поля.';
     return;
   }
 
@@ -193,7 +191,7 @@ async function finishTest() {
       session: SESSION,
       name: el('name').value.trim(),
       cls: el('cls').value.trim(),
-      subject: el('subject').value,
+      subject: subject,
       answers: answers
     });
     el('score').textContent = d.result.score + '/' + d.result.total;
