@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Самописец сигналов</title>
+<style>
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:12px;background:#f4f6f9;color:#111}
+h1{font-size:20px;margin:4px 0 8px}
+.st{font-size:15px;background:#fff;border:2px solid #2b5fd9;border-radius:10px;padding:8px 10px;margin-bottom:8px;line-height:1.5}
+.bt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+button{font-size:16px;padding:10px 14px;border-radius:10px;border:0;background:#2b5fd9;color:#fff;font-weight:700}
+button.g{background:#666}
+input{font-size:18px;padding:8px;width:140px;color:#111;background:#fff;border:1px solid #888;border-radius:8px}
+#log{font:14px/1.45 ui-monospace,Menlo,Consolas,monospace;background:#fff;border-radius:10px;padding:8px;white-space:pre-wrap;word-break:break-word}
+.b{color:#c00;font-weight:700}.f{color:#090;font-weight:700}.p{color:#b05a00;font-weight:700}
+#ok{font-size:14px;color:#090;margin-left:6px}
+</style></head><body>
+<h1>Самописец сигналов</h1>
+<div class="st" id="st">…</div>
+<div class="bt"><button id="cp">📋 Скопировать запись</button><button class="g" id="cl">Очистить</button><span id="ok"></span></div>
+<div class="bt"><input id="inp" inputmode="decimal" placeholder="поле"></div>
+<div id="log"></div>
+<script>
+(function(){
+var K='samopisets_log',L=[],t0=Date.now();
+try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){L=[]}
+var logEl=document.getElementById('log'),stEl=document.getElementById('st');
+function hh(){var d=new Date();return d.toTimeString().slice(0,8)+'.'+String(d.getMilliseconds()).padStart(3,'0')}
+function cls(s){if(/^(blur|hidden|pagehide|freeze|focusout)/.test(s))return 'b';if(/^(focus|visible|pageshow|resume)/.test(s))return 'f';if(/^⏸/.test(s))return 'p';return ''}
+function draw(){logEl.innerHTML=L.slice().reverse().map(function(x){var c=cls(x[1]);return '<div'+(c?' class="'+c+'"':'')+'>'+x[0]+'  '+x[1].replace(/</g,'&lt;')+'</div>'}).join('')}
+function add(s){L.push([hh(),s]);if(L.length>400)L=L.slice(-400);try{localStorage.setItem(K,JSON.stringify(L))}catch(e){}draw()}
+function sz(){var v=window.visualViewport;return 'in '+innerWidth+'×'+innerHeight+' out '+outerWidth+'×'+outerHeight+(v?' vv '+Math.round(v.width)+'×'+Math.round(v.height)+' s'+(v.scale||1).toFixed(2):'')}
+function stat(){stEl.innerHTML='Фокус: <b>'+(document.hasFocus()?'да':'НЕТ')+'</b> · видна: <b>'+(document.hidden?'НЕТ':'да')+'</b><br>'+sz()+'<br><small>'+navigator.userAgent.replace(/</g,'')+'</small>'}
+add('— открыта страница —');
+['blur','focus'].forEach(function(n){addEventListener(n,function(e){if(e.target===window)add(n+' (окно)')})});
+document.addEventListener('focusin',function(e){add('focusin '+(e.target.id||e.target.tagName))});
+document.addEventListener('focusout',function(e){add('focusout '+(e.target.id||e.target.tagName))});
+document.addEventListener('visibilitychange',function(){add((document.hidden?'hidden':'visible')+' (visibilitychange)')});
+addEventListener('pagehide',function(e){add('pagehide persisted='+e.persisted)});
+addEventListener('pageshow',function(e){add('pageshow persisted='+e.persisted)});
+document.addEventListener('freeze',function(){add('freeze')});
+document.addEventListener('resume',function(){add('resume')});
+addEventListener('resize',function(){add('resize '+sz())});
+if(window.visualViewport)visualViewport.addEventListener('resize',function(){add('vv-resize '+sz())});
+addEventListener('orientationchange',function(){add('orientationchange')});
+document.addEventListener('touchcancel',function(){add('touchcancel')},true);
+document.addEventListener('pointercancel',function(){add('pointercancel')},true);
+var lf=document.hasFocus(),lh=document.hidden,lt=Date.now();
+setInterval(function(){var n=Date.now(),g=n-lt;lt=n;if(g>600)add('⏸ таймер стоял '+g+' мс');
+var f=document.hasFocus(),h=document.hidden;if(f!==lf){add('опрос: hasFocus='+f);lf=f}if(h!==lh){add('опрос: hidden='+h);lh=h}stat()},200);
+var lr=performance.now();(function fr(){var n=performance.now();if(n-lr>600)add('⏸ кадры стояли '+Math.round(n-lr)+' мс');lr=n;requestAnimationFrame(fr)})();
+document.getElementById('cl').onclick=function(){L=[];try{localStorage.removeItem(K)}catch(e){}add('— очищено —')};
+document.getElementById('cp').onclick=function(){var s=navigator.userAgent+'\n'+L.map(function(x){return x[0]+'  '+x[1]}).join('\n');
+var ok=document.getElementById('ok');function done(){ok.textContent='скопировано'}
+try{navigator.clipboard.writeText(s).then(done,function(){fb(s);done()})}catch(e){fb(s);done()}};
+function fb(s){var t=document.createElement('textarea');t.value=s;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(e){}t.remove()}
+stat();
+})();
+</script>
+</body></html>
