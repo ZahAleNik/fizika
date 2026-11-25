@@ -81,8 +81,12 @@ th{background:#f1f5f9}
 
 </main>
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbzvoMNjElhxNlMOda9CLusFM2pp12zKTPS6fypLeWzjIYh8Gka7Cfz1lvRK5eYWPi43/exec';
-const SESSION = new URLSearchParams(location.search).get('session') || '';
+// Основной бот — по умолчанию; другие боты (например, математика коллеги) передают свой скрипт в параметре k
+const PARAMS = new URLSearchParams(location.search);
+const K = (PARAMS.get('k') || '').replace(/[^A-Za-z0-9_-]/g, '');
+const API = 'https://script.google.com/macros/s/' +
+  (K || 'AKfycbzvoMNjElhxNlMOda9CLusFM2pp12zKTPS6fypLeWzjIYh8Gka7Cfz1lvRK5eYWPi43') + '/exec';
+const SESSION = PARAMS.get('session') || '';
 const ABC = 'ABCDE';
 const el = id => document.getElementById(id);
 let catalog = [], subject = '', test = '', quiz = [];
